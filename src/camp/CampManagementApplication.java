@@ -97,12 +97,6 @@ public class CampManagementApplication {
                 )
         );
         scoreStore = new ArrayList<>();
-
-        studentStore = List.of(new Student(sequence(INDEX_TYPE_STUDENT), "홍길동"),
-                new Student(sequence(INDEX_TYPE_STUDENT), "김철수"),
-                new Student(sequence(INDEX_TYPE_STUDENT), "김영희"),
-                new Student(sequence(INDEX_TYPE_STUDENT), "이길동"),
-                new Student(sequence(INDEX_TYPE_STUDENT), "고길동"));
     }
 
     // index 자동 증가
@@ -261,14 +255,14 @@ public class CampManagementApplication {
             System.out.println(e.getMessage());
         }
 
-        scoreStore.forEach(score1 -> {
-            System.out.println(score1.getScoreId());
-            System.out.println(score1.getStudent().getStudentName());
-            System.out.println(score1.getSubject().getSubjectName());
-            System.out.println(score1.getRound());
-            System.out.println(score1.getScore());
-            System.out.println(score1.getGrade());
-        });
+//        scoreStore.forEach(score1 -> {
+//            System.out.println(score1.getScoreId());
+//            System.out.println(score1.getStudent().getStudentName());
+//            System.out.println(score1.getSubject().getSubjectName());
+//            System.out.println(score1.getRound());
+//            System.out.println(score1.getScore());
+//            System.out.println(score1.getGrade());
+//        });
     }
 
     // 수강생의 과목별 회차 점수 수정
