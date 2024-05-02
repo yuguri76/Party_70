@@ -75,11 +75,11 @@ public class Score {
         return grade;
     }
 
-    public String getStudentName() {
-        return student.getStudentName();
+    public Student getStudent() {
+        return student;
     }
-    public String getSubjectName() {
-        return subject.getSubjectName();
+    public Subject getSubject() {
+        return subject;
     }
 }
 
