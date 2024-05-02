@@ -198,7 +198,7 @@ public class CampManagementApplication {
         selectSubject(choiceSubjects, student, 2, SUBJECT_TYPE_CHOICE);
 
         studentStore.add(student);
-        System.out.println("수강생 등록 성공!\n");
+        System.out.println("수강생 등록 성공! 수강생 관리 화면으로 돌아갑니다.\n");
     }
 
     private static void selectSubject(List<Subject> subjects, Student student, int minRequired, String subjectType) {
