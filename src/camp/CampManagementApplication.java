@@ -325,11 +325,56 @@ public class CampManagementApplication {
 
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        // 기능 구현 (수정할 과목 및 회차, 점수)
-        System.out.println("시험 점수를 수정합니다...");
-        // 기능 구현
-        System.out.println("\n점수 수정 성공!");
+        try {
+            System.out.println("점수를 수정합니다...");
+            String studentId = getStudentId(); // 관리할 수강생 고유 번호
+            // 점수 저장소에서 수강생으로 필터링 : 수강생
+            List<Score> studentScoreList = scoreStore.stream()
+                    .filter(score -> score.getStudent().getStudentId().equals(studentId)).toList();
+
+            // 기능 구현 (수정할 과목 및 회차, 점수)
+
+            System.out.println("수정할 과목을 입력해주세요.");
+            String subjectId = sc.nextLine();
+            // 존재하는 과목인지 검증
+            if (subjectStore.stream().noneMatch((Subject s) -> s.getSubjectId().equals(subjectId))) {
+                throw new CreateScoreException("존재하지 않는 과목입니다.");
+            } // 수강생이 시험을 치른 과목인지 검증
+            else if (studentScoreList.stream().noneMatch((Score s) -> s.getStudent().getStudentId().equals(studentId))) {
+                throw new CreateScoreException("학생이 시험을 치르지 않은 과목입니다.");
+            }
+
+            // 수강생의 점수 중 해당 과목으로 필터링 : 수강생, 과목
+            List<Score> studentSubjectScoreList = studentScoreList.stream()
+                    .filter(score -> score.getSubject().getSubjectId().equals(subjectId)).toList();
+
+            System.out.println("수정할 회차를 입력해주세요.");
+            int targetRound = sc.nextInt();
+            sc.nextLine();
+            // 입력이 1부터 10인지 검증
+            if (targetRound > 10 || targetRound < 0) {
+                throw new CreateScoreException("1부터 10까지의 회차를 입력하세요");
+            } // 수강생이 응시한 회차인지 검증
+            else if (studentSubjectScoreList.stream().noneMatch((Score s) -> s.getRound()==targetRound)) {
+                throw new CreateScoreException("학생이 아직 응시하지 않은 회차입니다.");
+            }
+
+            Score targetScore = studentSubjectScoreList.stream()
+                            .filter(score -> score.getRound() == targetRound).findAny().get();
+            System.out.println("현재 점수는 "+targetScore.getScore()+"점 입니다.");
+            System.out.println("수정할 점수를 입력해 주세요.");
+            int score = sc.nextInt();
+            sc.nextLine();
+            if (score > 100 || score < 0) {
+                throw new CreateScoreException("1부터 100 까지의 점수를 입력하세요");
+            }
+
+            targetScore.setScore(score);
+            // 기능 구현
+            System.out.println("\n점수 수정 성공!");
+        } catch (CreateScoreException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     // 수강생의 특정 과목 회차별 등급 조회
