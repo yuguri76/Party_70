@@ -7,6 +7,7 @@ import camp.model.Subject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * Notification
@@ -166,15 +167,72 @@ public class CampManagementApplication {
 
     // 수강생 등록
     private static void createStudent() {
-        System.out.println("\n수강생을 등록합니다...");
-        System.out.print("수강생 이름 입력: ");
-        String studentName = sc.next();
+        System.out.println("수강생을 등록합니다...");
+        String studentName = "";
+
+        // 이름 입력받기(입력하기 전까지 다음 프롬프트로 안넘어감)
+        while (studentName.isEmpty()) {
+            System.out.println("수강생의 이름을 입력해주세요.");
+            studentName = sc.next();
+
+        }
+
         // 기능 구현 (필수 과목, 선택 과목)
 
         Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
+
         // 기능 구현
-        System.out.println("수강생 등록 성공!\n");
+
+        //필수 과목은 자동으로 등록되어야함.
+        List<Subject> mandatorySubjects = subjectStore.stream()
+                        .filter(s -> s.getSubjectType().equals(SUBJECT_TYPE_MANDATORY))
+                                .collect(Collectors.toList());
+        System.out.println("필수 과목을 선택하세요. 최소 3개 이상 선택하여야 합니다.");
+        selectSubject(mandatorySubjects, student, 3, SUBJECT_TYPE_MANDATORY);
+
+        //선택 과목 등록
+        List<Subject> choiceSubjects = subjectStore.stream()
+                .filter(s -> s.getSubjectType().equals(SUBJECT_TYPE_CHOICE))
+                .collect(Collectors.toList());
+        System.out.println("선택 과목을 선택하세요. 최소 2개 이상 선택하여야 합니다.");
+        selectSubject(choiceSubjects, student, 2, SUBJECT_TYPE_CHOICE);
+
+        studentStore.add(student);
+        System.out.println("수강생 등록 성공! 수강생 관리 화면으로 돌아갑니다.\n");
     }
+
+    private static void selectSubject(List<Subject> subjects, Student student, int minRequired, String subjectType) {
+        int selectedCount = 0;
+        while (selectedCount < minRequired) {
+            for (int i = 0; i < subjects.size(); i++) {
+                System.out.println((i + 1) + ". " + subjects.get(i).getSubjectName());
+            }
+            System.out.println("선택할 과목의 번호를 입력해 주세요.");
+            if (!sc.hasNextInt()) {
+                System.out.println("숫자를 입력해 주세요.");
+                sc.next(); // 버퍼 비우기
+                continue;
+            }
+            int choice = sc.nextInt() - 1;
+            if (choice >= 0 && choice < subjects.size()) {
+                Subject selectedSubject = subjects.get(choice);
+                if (!student.getEnrolledSubjects().contains(selectedSubject)) {
+                    student.enrollSubject(selectedSubject);
+                    selectedCount++;
+                    System.out.println(selectedSubject.getSubjectName() + " 선택 완료!");
+                } else {
+                    System.out.println("이미 선택한 과목입니다. 다시 선택해 주세요.");
+                }
+            } else {
+                System.out.println("잘못된 입력입니다. 다시 선택해 주세요.");
+            }
+
+            if (selectedCount < minRequired) {
+                System.out.println("최소 " + minRequired + "개 이상 선택해주세요.");
+            }
+        }
+    }
+
 
     // 수강생 목록 조회
     private static void inquireStudent() {
