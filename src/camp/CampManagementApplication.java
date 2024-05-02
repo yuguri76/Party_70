@@ -334,10 +334,19 @@ public class CampManagementApplication {
 
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        // 기능 구현 (조회할 특정 과목)
+        String studentId = getStudentId(); // 입력된 관리할 수강생 고유 번호
+        /*조회할 과목 선택 후 회차별 등급 조회*/
+        System.out.println("조회할 과목을 선택해주세요. :");
+        // 과목선택
         System.out.println("회차별 등급을 조회합니다...");
-        // 기능 구현
+        // 회차별 등급 조회
+
+        /*과목별 평균 등급을 조회*/
+        System.out.println("과목 별 평균 등급을 조회하시겠습니까? (Y/N)");
+        /*Y일경우 모든 과목을 반복해서 평균, 그것에 해당하는 등급 출력*/
+        /*N일경우 그냥 넘억가기*/
+
+        /*다시 메인으로 돌아가기 전 출력문구*/
         System.out.println("\n등급 조회 성공!");
     }
 
