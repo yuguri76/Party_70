@@ -338,29 +338,26 @@ public class CampManagementApplication {
 
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
-        String studentId = getStudentId(); // 입력된 관리할 수강생 고유 번호 입력받기
+        String studentId = getStudentId();
         //아이디로 학생찾기
         Student resultStudent = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0);
 
         /*조회할 과목 선택 후 회차별 등급 조회*/
-        System.out.println("\n다음은 "+resultStudent.getStudentName()+" 학생의 수강 과목입니다.");
-        //조회를 해서 표처럼 출력
-        System.out.printf("%-10s%-10s%-20s%n","과목ID","과목타입","과목이름");
+        System.out.println("\n다음은 " + resultStudent.getStudentName() + " 학생의 수강 과목입니다.");
+        System.out.printf("%-10s%-10s%-20s%n", "과목ID", "과목타입", "과목이름");
         System.out.println("----------------------------------");
-        for(Subject subject : resultStudent.getEnrolledSubjects()){
+        for (Subject subject : resultStudent.getEnrolledSubjects()) {
             String subjectType = subject.getSubjectType();
             String subjectName = subject.getSubjectName();
             String subjectId = subject.getSubjectId();
-
-            System.out.printf("%-10s%-15s%-20s%n",subjectId,subjectType,subjectName);
+            System.out.printf("%-10s%-15s%-20s%n", subjectId, subjectType, subjectName);
         }
-        //입력한 과목 찾기
+
+        /*입력한 과목 회차별 등급 조회*/
         System.out.print("\n조회할 과목ID 입력해주세요. :");
         String searchID = sc.next().toUpperCase();
         Subject resultSubject = subjectStore.stream().filter((Subject s) -> s.getSubjectId().equals(searchID)).toList().get(0);
-        //입력 과목 회차별 등급조회
-                System.out.println("\n" + resultSubject.getSubjectName() + " 과목의 회차별 등급을 조회합니다...");
-        //resultStudent resultSubject와 일치한 Score를 scoreStore에서 조회
+        System.out.println("\n" + resultSubject.getSubjectName() + " 과목의 회차별 등급을 조회합니다...");
         List<Score> resultScore = scoreStore.stream().filter(s -> s.getStudent().equals(resultStudent) && s.getSubject().equals(resultSubject)).toList();
         if (!resultScore.isEmpty()) {
             System.out.printf("%-8s%-10s%n", "회차", "등급");
@@ -374,28 +371,24 @@ public class CampManagementApplication {
             System.out.println("점수가 등록되어 있지 않습니다.");
         }
 
-
         /*과목별 평균 등급을 조회*/
         System.out.print("\n과목별 평균 등급을 조회하시겠습s니까? (yes 입력 시, 조회):");
         String input = sc.next();
-        if(input.equals("yes")){
+        if (input.equals("yes")) {
             System.out.println("\n과목이름(과목타입)  :  평균등급");
             System.out.println("----------------------------------");
-            //입력된 학생 과목별로 평균 모두 찾기
-            for(Subject subject : resultStudent.getEnrolledSubjects()){
-                double average = 0; // 점수의 평균값 초기화
-                String averageGrade = null; // 타입에 따른 평균값 등급 초기화
-                //해당 과목의 점수 찾기
+            for (Subject subject : resultStudent.getEnrolledSubjects()) {
+                double average = 0; // 과목별 평균 점수
+                String averageGrade = null; // 과목별 평균 등급
                 List<Score> subjectScore = scoreStore.stream().filter(s -> s.getStudent().equals(resultStudent) && s.getSubject().equals(subject)).toList();
 
-                //평균 등급 계산 : 과목 모든회차 점수의 평균을 등급으로 환산
-                for(Score score : subjectScore) {
-                   average += score.getScore();
+                for (Score score : subjectScore) {
+                    average += score.getScore();
                 }
-                average /= subjectScore.size(); // 평균 점수 계산
+                average /= subjectScore.size();
 
-                switch(subject.getSubjectType()) { // 등급찾기
-                    case "MANDATORY" :
+                switch (subject.getSubjectType()) {
+                    case "MANDATORY":
                         if (average <= 100) {
                             averageGrade = "A";
                         }
@@ -415,7 +408,7 @@ public class CampManagementApplication {
                             averageGrade = "N";
                         }
                         break;
-                    case "CHOICE" :
+                    case "CHOICE":
                         if (average <= 100) {
                             averageGrade = "A";
                         }
@@ -436,14 +429,13 @@ public class CampManagementApplication {
                         }
                         break;
                 }
-
-                if(averageGrade == null) { // 점수가 없어 NaN 반환될때
+                if (averageGrade == null) {
                     averageGrade = "점수 미등록";
                 }
-
-                System.out.println(subject.getSubjectName()+"("+subject.getSubjectType()+")  :  "+averageGrade);
+                System.out.println(subject.getSubjectName() + "(" + subject.getSubjectType() + ")  :  " + averageGrade);
             }
         }
+
         /*다시 메인으로 돌아가기 전 출력문구*/
         System.out.println("\n등급 조회 종료");
     }
