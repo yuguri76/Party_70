@@ -241,7 +241,7 @@ public class CampManagementApplication {
         for(Student student : studentStore){
             System.out.println("수강생 성명: " + student.getStudentName() + " || "+ "수강생 ID: " + student.getStudentId());
         }
-
+        
         System.out.println("\n수강생 목록 조회 성공!");
     }
 
