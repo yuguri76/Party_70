@@ -372,7 +372,7 @@ public class CampManagementApplication {
         }
 
         /*과목별 평균 등급을 조회*/
-        System.out.print("\n과목별 평균 등급을 조회하시겠습s니까? (yes 입력 시, 조회):");
+        System.out.print("\n과목별 평균 등급을 조회하시겠습니까? (yes 입력 시, 조회):");
         String input = sc.next();
         if (input.equals("yes")) {
             System.out.println("\n과목이름(과목타입)  :  평균등급");
