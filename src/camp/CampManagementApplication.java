@@ -282,6 +282,14 @@ public class CampManagementApplication {
             // 기능 구현
             String studentId = getStudentId(); // 관리할 수강생 고유 번호
             sc.nextLine();
+            Student student = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0);
+            List<Subject> enrolledSubject = student.getEnrolledSubjects();
+            System.out.println(student.getStudentName() + " 수강생의 수강 과목입니다.");
+            enrolledSubject.forEach(subject -> {
+                System.out.println(subject.getSubjectId() + ". " + subject.getSubjectName());
+            });
+            System.out.println("");
+            System.out.println("과목의 번호를 입력하시오");
             String subjectId = sc.nextLine();
             if(subjectStore.stream().noneMatch((Subject s) -> s.getSubjectId().equals(subjectId))) {
                 throw new CreateScoreException("존재하지 않는 과목입니다.");
@@ -337,11 +345,106 @@ public class CampManagementApplication {
 
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        // 기능 구현 (조회할 특정 과목)
-        System.out.println("회차별 등급을 조회합니다...");
-        // 기능 구현
-        System.out.println("\n등급 조회 성공!");
+        String studentId = getStudentId();
+        //아이디로 학생찾기
+        Student resultStudent = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0);
+
+        /*조회할 과목 선택 후 회차별 등급 조회*/
+        System.out.println("\n다음은 " + resultStudent.getStudentName() + " 학생의 수강 과목입니다.");
+        System.out.printf("%-10s%-10s%-20s%n", "과목ID", "과목타입", "과목이름");
+        System.out.println("----------------------------------");
+        for (Subject subject : resultStudent.getEnrolledSubjects()) {
+            String subjectType = subject.getSubjectType();
+            String subjectName = subject.getSubjectName();
+            String subjectId = subject.getSubjectId();
+            System.out.printf("%-10s%-15s%-20s%n", subjectId, subjectType, subjectName);
+        }
+
+        /*입력한 과목 회차별 등급 조회*/
+        System.out.print("\n조회할 과목ID 입력해주세요. :");
+        String searchID = sc.next().toUpperCase();
+        Subject resultSubject = subjectStore.stream().filter((Subject s) -> s.getSubjectId().equals(searchID)).toList().get(0);
+        System.out.println("\n" + resultSubject.getSubjectName() + " 과목의 회차별 등급을 조회합니다...");
+        List<Score> resultScore = scoreStore.stream().filter(s -> s.getStudent().equals(resultStudent) && s.getSubject().equals(resultSubject)).toList();
+        if (!resultScore.isEmpty()) {
+            System.out.printf("%-8s%-10s%n", "회차", "등급");
+            System.out.println("------------");
+            for (Score score : resultScore) {
+                int round = score.getRound();
+                char grade = score.getGrade();
+                System.out.printf("%-10s%-10s%n", round, grade);
+            }
+        } else {
+            System.out.println("점수가 등록되어 있지 않습니다.");
+        }
+
+        /*과목별 평균 등급을 조회*/
+        System.out.print("\n과목별 평균 등급을 조회하시겠습니까? (yes 입력 시, 조회):");
+        String input = sc.next();
+        if (input.equals("yes")) {
+            System.out.println("\n과목이름(과목타입)  :  평균등급");
+            System.out.println("----------------------------------");
+            for (Subject subject : resultStudent.getEnrolledSubjects()) {
+                double average = 0; // 과목별 평균 점수
+                String averageGrade = null; // 과목별 평균 등급
+                List<Score> subjectScore = scoreStore.stream().filter(s -> s.getStudent().equals(resultStudent) && s.getSubject().equals(subject)).toList();
+
+                for (Score score : subjectScore) {
+                    average += score.getScore();
+                }
+                average /= subjectScore.size();
+
+                switch (subject.getSubjectType()) {
+                    case "MANDATORY":
+                        if (average <= 100) {
+                            averageGrade = "A";
+                        }
+                        if (average < 95) {
+                            averageGrade = "B";
+                        }
+                        if (average < 90) {
+                            averageGrade = "C";
+                        }
+                        if (average < 80) {
+                            averageGrade = "D";
+                        }
+                        if (average < 70) {
+                            averageGrade = "F";
+                        }
+                        if (average < 60) {
+                            averageGrade = "N";
+                        }
+                        break;
+                    case "CHOICE":
+                        if (average <= 100) {
+                            averageGrade = "A";
+                        }
+                        if (average < 90) {
+                            averageGrade = "B";
+                        }
+                        if (average < 80) {
+                            averageGrade = "C";
+                        }
+                        if (average < 70) {
+                            averageGrade = "D";
+                        }
+                        if (average < 60) {
+                            averageGrade = "F";
+                        }
+                        if (average < 50) {
+                            averageGrade = "N";
+                        }
+                        break;
+                }
+                if (averageGrade == null) {
+                    averageGrade = "점수 미등록";
+                }
+                System.out.println(subject.getSubjectName() + "(" + subject.getSubjectType() + ")  :  " + averageGrade);
+            }
+        }
+
+        /*다시 메인으로 돌아가기 전 출력문구*/
+        System.out.println("\n등급 조회 종료");
     }
 
 }
