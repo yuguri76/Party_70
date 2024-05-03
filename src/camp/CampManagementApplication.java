@@ -278,9 +278,16 @@ public class CampManagementApplication {
             // 기능 구현
             String studentId = getStudentId(); // 관리할 수강생 고유 번호
             sc.nextLine();
+            Student student = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0);
+            List<Subject> enrolledSubject = student.getEnrolledSubjects();
+            System.out.println(student.getStudentName() + " 수강생의 수강 과목입니다.");
+            enrolledSubject.forEach(subject -> {
+                System.out.println(subject.getSubjectId() + ". " + subject.getSubjectName());
+            });
+            System.out.println("");
             System.out.println("과목의 번호를 입력하시오");
             String subjectId = sc.nextLine();
-            if(subjectStore.stream().noneMatch((Subject s) -> s.getSubjectId().equals(subjectId))) {
+            if(enrolledSubject.stream().noneMatch((Subject s) -> s.getSubjectId().equals(subjectId))) {
                 throw new CreateScoreException("존재하지 않는 과목입니다.");
             }
 
