@@ -238,6 +238,10 @@ public class CampManagementApplication {
     private static void inquireStudent() {
         System.out.println("\n수강생 목록을 조회합니다...");
         // 기능 구현
+        for(Student student : studentStore){
+            System.out.println("수강생 성명: " + student.getStudentName() + " || "+ "수강생 ID: " + student.getStudentId());
+        }
+        
         System.out.println("\n수강생 목록 조회 성공!");
     }
 
