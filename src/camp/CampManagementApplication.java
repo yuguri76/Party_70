@@ -356,26 +356,30 @@ public class CampManagementApplication {
         }
         //입력한 과목 찾기
         System.out.print("\n조회할 과목ID 입력해주세요. :");
-        String searchID = sc.next();
+        String searchID = sc.next().toUpperCase();
         Subject resultSubject = subjectStore.stream().filter((Subject s) -> s.getSubjectId().equals(searchID)).toList().get(0);
-
         //입력 과목 회차별 등급조회
-        System.out.println("\n"+resultSubject.getSubjectName()+" 과목의 회차별 등급을 조회합니다...");
+                System.out.println("\n" + resultSubject.getSubjectName() + " 과목의 회차별 등급을 조회합니다...");
         //resultStudent resultSubject와 일치한 Score를 scoreStore에서 조회
-        System.out.printf("%-8s%-10s%n","회차","등급");
-        System.out.println("------------");
         List<Score> resultScore = scoreStore.stream().filter(s -> s.getStudent().equals(resultStudent) && s.getSubject().equals(resultSubject)).toList();
-        for(Score score : resultScore) {
-            int round = score.getRound();
-            char grade = score.getGrade();
-            System.out.printf("%-10s%-10s%n",round,grade);
+        if (!resultScore.isEmpty()) {
+            System.out.printf("%-8s%-10s%n", "회차", "등급");
+            System.out.println("------------");
+            for (Score score : resultScore) {
+                int round = score.getRound();
+                char grade = score.getGrade();
+                System.out.printf("%-10s%-10s%n", round, grade);
+            }
+        } else {
+            System.out.println("점수가 등록되어 있지 않습니다.");
         }
+
+
         /*과목별 평균 등급을 조회*/
         System.out.print("\n과목별 평균 등급을 조회하시겠습s니까? (yes 입력 시, 조회):");
         String input = sc.next();
-
         if(input.equals("yes")){
-            System.out.println("과목이름(과목타입)  :  평균등급");
+            System.out.println("\n과목이름(과목타입)  :  평균등급");
             System.out.println("----------------------------------");
             //입력된 학생 과목별로 평균 모두 찾기
             for(Subject subject : resultStudent.getEnrolledSubjects()){
@@ -431,9 +435,12 @@ public class CampManagementApplication {
                             averageGrade = "N";
                         }
                         break;
-                    default:
-                        averageGrade = "점수가 등록되어 있지 않습니다."; // 점수가 없어 NaN 반환될때
                 }
+
+                if(averageGrade == null) { // 점수가 없어 NaN 반환될때
+                    averageGrade = "점수 미등록";
+                }
+
                 System.out.println(subject.getSubjectName()+"("+subject.getSubjectType()+")  :  "+averageGrade);
             }
         }
