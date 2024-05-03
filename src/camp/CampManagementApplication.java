@@ -314,20 +314,24 @@ public class CampManagementApplication {
         }
 
 //        scoreStore.forEach(score1 -> {
-//            System.out.println(score1.getScoreId());
+//           System.out.println(score1.getScoreId());
 //            System.out.println(score1.getStudent().getStudentName());
 //            System.out.println(score1.getSubject().getSubjectName());
 //            System.out.println(score1.getRound());
 //            System.out.println(score1.getScore());
 //            System.out.println(score1.getGrade());
-//        });
+//       });
     }
 
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
         try {
             System.out.println("점수를 수정합니다...");
-            String studentId = getStudentId(); // 관리할 수강생 고유 번호
+            String studentId = getStudentId();// 관리할 수강생 고유 번호
+            sc.nextLine();
+            if (studentStore.stream().noneMatch((Student s) -> s.getStudentId().equals(studentId))) {
+                throw new CreateScoreException("존재하지 않는 수강생입니다.");
+            }
             // 점수 저장소에서 수강생으로 필터링 : 수강생
             List<Score> studentScoreList = scoreStore.stream()
                     .filter(score -> score.getStudent().getStudentId().equals(studentId)).toList();
@@ -358,10 +362,11 @@ public class CampManagementApplication {
             else if (studentSubjectScoreList.stream().noneMatch((Score s) -> s.getRound()==targetRound)) {
                 throw new CreateScoreException("학생이 아직 응시하지 않은 회차입니다.");
             }
-
+            // 목표로 하는 수강생의 과목 회차 점수 score 인스턴스
             Score targetScore = studentSubjectScoreList.stream()
                             .filter(score -> score.getRound() == targetRound).findAny().get();
             System.out.println("현재 점수는 "+targetScore.getScore()+"점 입니다.");
+            int beforeScore = targetScore.getScore();
             System.out.println("수정할 점수를 입력해 주세요.");
             int score = sc.nextInt();
             sc.nextLine();
@@ -370,8 +375,21 @@ public class CampManagementApplication {
             }
 
             targetScore.setScore(score);
+            int afterScore = targetScore.getScore();
+            System.out.println("이전 점수 : "+beforeScore+" | 수정 점수 : "+ afterScore);
             // 기능 구현
             System.out.println("\n점수 수정 성공!");
+//
+//            scoreStore.forEach(score1 -> {
+//                System.out.println(score1.getScoreId());
+//                System.out.println(score1.getStudent().getStudentName());
+//                System.out.println(score1.getSubject().getSubjectName());
+//                System.out.println(score1.getRound());
+//                System.out.println(score1.getScore());
+//                System.out.println(score1.getGrade());
+//            });
+
+
         } catch (CreateScoreException e) {
             System.out.println(e.getMessage());
         }
