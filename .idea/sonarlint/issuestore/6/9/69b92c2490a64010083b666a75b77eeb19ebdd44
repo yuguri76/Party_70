@@ -1,13 +1,8 @@
 
-
-java:S1301"KReplace this "switch" statement by "if" statements to increase readability.(ÜŸ•8Ç¶Îàó1J$62af0f0a-8759-4f92-8bb4-136815c03358
-
-java:S1301^"KReplace this "switch" statement by "if" statements to increase readability.(ÜŸ•8È¶Îàó1J$757fd283-28ee-4633-ad78-d7e739e992c3
-\
-java:S1700"Rename field "score"(µ¼æÿÿÿÿÿ8Ì¶Îàó1J$23db7a13-1487-4883-99c6-8fde542350c1
-•
-java:S3776"RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(üˆ‰ö8ƒ·Îàó1J$2d370d38-8804-4539-adeb-b0abbc05d255
-d	java:S131""Add a default case to this switch.(ÜŸ•8‡·Îàó1J$6e25ba43-71f4-4aee-bc04-21507586acf3
-”
-java:S3776["RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(Ûï¡/8Š·Îàó1J$36b9ef7f-30bb-477b-a6af-7757e34d9c27
-d	java:S131^""Add a default case to this switch.(ÜŸ•8Œ·Îàó1J$e4ec7e3c-493f-4097-b307-02cfa572a1f2
+6
+java:S1700"Rename field "score"(µ¼æÿÿÿÿÿ8õï³ßó1
+o
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(üˆ‰ö8‚ğ³ßó1
+>	java:S131""Add a default case to this switch.(ÜŸ•8„ğ³ßó1
+h
+java:S1301"KReplace this "switch" statement by "if" statements to increase readability.(ÜŸ•8…ğ³ßó1
