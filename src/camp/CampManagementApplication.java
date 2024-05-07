@@ -343,6 +343,19 @@ public class CampManagementApplication {
             if (studentStore.stream().noneMatch((Student s) -> s.getStudentId().equals(studentId))) {
                 throw new CreateScoreException("존재하지 않는 수강생입니다.");
             }
+
+            // 학생의 수강과목 조회 및 출력
+            Student targetStudent = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).findFirst().get();
+            System.out.println("\n다음은 " + targetStudent.getStudentName() + " 학생의 수강 과목입니다.");
+            System.out.printf("%-10s%-10s%-20s%n", "과목ID", "과목타입", "과목이름");
+            System.out.println("----------------------------------");
+            for (Subject subject : targetStudent.getEnrolledSubjects()) {
+                String subjectType = subject.getSubjectType();
+                String subjectName = subject.getSubjectName();
+                String subjectId = subject.getSubjectId();
+                System.out.printf("%-10s%-15s%-20s%n", subjectId, subjectType, subjectName);
+            }
+
             // 점수 저장소에서 수강생으로 필터링 : 수강생
             List<Score> studentScoreList = scoreStore.stream()
                     .filter(score -> score.getStudent().getStudentId().equals(studentId)).toList();
@@ -354,14 +367,27 @@ public class CampManagementApplication {
             // 존재하는 과목인지 검증
             if (subjectStore.stream().noneMatch((Subject s) -> s.getSubjectId().equals(subjectId))) {
                 throw new CreateScoreException("존재하지 않는 과목입니다.");
-            } // 수강생이 시험을 치른 과목인지 검증
+            } // 수강생이 수강하는 과목인지 검증
             else if (studentScoreList.stream().noneMatch((Score s) -> s.getStudent().getStudentId().equals(studentId))) {
-                throw new CreateScoreException("학생이 시험을 치르지 않은 과목입니다.");
+                throw new CreateScoreException("학생이 수강하지 않은 과목입니다.");
             }
-
+            // 지정된 과목 이름 할당
+            String subjectName = subjectStore.stream().filter((Subject s) ->
+                    s.getSubjectId().equals(subjectId)).findFirst().get().getSubjectName();
             // 수강생의 점수 중 해당 과목으로 필터링 : 수강생, 과목
             List<Score> studentSubjectScoreList = studentScoreList.stream()
                     .filter(score -> score.getSubject().getSubjectId().equals(subjectId)).toList();
+            if (studentSubjectScoreList.isEmpty()) {
+                throw new CreateScoreException("수강생이 시험을 응시하지 않았습니다.");
+            }
+            System.out.println(subjectName + " 과목의 점수 내역입니다.");
+            studentSubjectScoreList.forEach(score -> {
+                int _round = score.getRound();
+                int _score = score.getScore();
+                        System.out.println(_round+"회차 점수 : "+_score);
+            }
+            );
+
 
             System.out.println("수정할 회차를 입력해주세요.");
             int targetRound = sc.nextInt();
