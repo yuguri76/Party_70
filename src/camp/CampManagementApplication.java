@@ -378,7 +378,7 @@ public class CampManagementApplication {
             List<Score> studentSubjectScoreList = studentScoreList.stream()
                     .filter(score -> score.getSubject().getSubjectId().equals(subjectId)).toList();
             if (studentSubjectScoreList.isEmpty()) {
-                throw new CreateScoreException("수강생이 시험을 응시하지 않았습니다.");
+                throw new CreateScoreException("수강생이 이 과목의 시험을 응시하지 않았습니다.");
             }
             System.out.println(subjectName + " 과목의 점수 내역입니다.");
             studentSubjectScoreList.forEach(score -> {
