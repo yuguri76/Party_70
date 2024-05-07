@@ -275,66 +275,68 @@ public class CampManagementApplication {
 
     private static String getStudentId() {
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
-        return sc.next();
+        String id = sc.next();
+        if (studentStore.stream().noneMatch((Student s) -> s.getStudentId().equals(id))) {
+            return null;
+        }
+        return id;
     }
 
     // 수강생의 과목별 시험 회차 및 점수 등록
     private static void createScore() {
-        try {
-            System.out.println("시험 점수를 등록합니다...");
-            // 기능 구현
-            String studentId = getStudentId(); // 관리할 수강생 고유 번호
-            sc.nextLine();
-            Student student = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0);
-            List<Subject> enrolledSubject = student.getEnrolledSubjects();
-            System.out.println(student.getStudentName() + " 수강생의 수강 과목입니다.");
-            enrolledSubject.forEach(subject -> {
-                System.out.println(subject.getSubjectId() + ". " + subject.getSubjectName());
-            });
-            System.out.println("");
-            System.out.println("과목의 번호를 입력하시오");
-            String subjectId = sc.nextLine();
-            if(subjectStore.stream().noneMatch((Subject s) -> s.getSubjectId().equals(subjectId))) {
-                throw new CreateScoreException("존재하지 않는 과목입니다.");
-            }
+        System.out.println("시험 점수를 등록합니다...");
+        // 기능 구현
+        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        if(studentId == null) {
+            System.out.println("존재하지 않는 수강생입니다.");
+            return;
+        }
+        sc.nextLine();
 
-            System.out.println("점수를 입력하시오");
-            int score = sc.nextInt();
-            if(score > 100 || score < 0) {
-                throw new CreateScoreException("1부터 100 까지의 점수를 입력하세요");
-            }
-
-            System.out.println("회차를 입력하시오");
-            int round = sc.nextInt();
-            if(round > 10 || round < 0) {
-                throw new CreateScoreException("1부터 10까지의 회차를 입력하세요");
-            }
-
-            Student resultStudent = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0);
-            Subject resultSubject = subjectStore.stream().filter((Subject s) -> s.getSubjectId().equals(subjectId)).toList().get(0);
-            if(scoreStore.stream().anyMatch((Score s) -> { return
-                    s.getStudent().getStudentId().equals(studentId) &&
-                            s.getSubject().getSubjectId().equals(subjectId) &&
-                            s.getRound() == round;})
-            ) {
-                throw new CreateScoreException("중복된 회차가 있습니다.");
-            }
-
-            Score scoreObject = new Score(sequence(INDEX_TYPE_SCORE), resultStudent, resultSubject, round, score);
-            scoreStore.add(scoreObject);
-            System.out.println("\n점수 등록 성공!");
-        } catch (CreateScoreException e) {
-            System.out.println(e.getMessage());
+        Student student = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0); // 수강중인 과목 필터링
+        List<Subject> enrolledSubject = student.getEnrolledSubjects();
+        System.out.println("\n다음은 " + student.getStudentName() + " 학생의 수강 과목입니다.");
+        System.out.printf("%-9s%-20s%n", "과목ID", "과목이름");
+        System.out.println("----------------------------");
+        enrolledSubject.forEach(subject -> {
+            System.out.printf("%-10s%-20s%n", subject.getSubjectId(), subject.getSubjectName());
+        });
+        System.out.println();
+        System.out.println("과목의 번호를 입력하시오");
+        String subjectId = sc.nextLine();
+        if(subjectStore.stream().noneMatch((Subject s) -> s.getSubjectId().equals(subjectId))) {
+            System.out.println("존재하지 않는 과목입니다.");
+            return;
         }
 
-//        scoreStore.forEach(score1 -> {
-//            System.out.println(score1.getScoreId());
-//            System.out.println(score1.getStudent().getStudentName());
-//            System.out.println(score1.getSubject().getSubjectName());
-//            System.out.println(score1.getRound());
-//            System.out.println(score1.getScore());
-//            System.out.println(score1.getGrade());
-//        });
+        System.out.println("점수를 입력하시오");
+        int score = sc.nextInt();
+        if(score > 100 || score < 0) {
+            System.out.println("1부터 100 까지의 점수를 입력하세요");
+            return;
+        }
+
+        System.out.println("회차를 입력하시오");
+        int round = sc.nextInt();
+        if(round > 10 || round < 0) {
+            System.out.println("1부터 10까지의 회차를 입력하세요");
+            return;
+        }
+
+        Student resultStudent = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0); // score객체에 저장할 student 객체 생성
+        Subject resultSubject = subjectStore.stream().filter((Subject s) -> s.getSubjectId().equals(subjectId)).toList().get(0); // score객체에 저장할 subject 객체 생성
+        if(scoreStore.stream().anyMatch((Score s) -> { return
+                s.getStudent().getStudentId().equals(studentId) &&
+                        s.getSubject().getSubjectId().equals(subjectId) &&
+                        s.getRound() == round;}) // 이름, 과목, 회차 셋 모두 검사해서 중복여부 확인
+        ) {
+            System.out.println("중복된 회차가 있습니다.");
+            return;
+        }
+
+        Score scoreObject = new Score(sequence(INDEX_TYPE_SCORE), resultStudent, resultSubject, round, score);
+        scoreStore.add(scoreObject);
+        System.out.println("\n점수 등록 성공!");
     }
 
     // 수강생의 과목별 회차 점수 수정
