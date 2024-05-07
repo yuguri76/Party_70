@@ -351,6 +351,12 @@ public class CampManagementApplication {
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
         String studentId = getStudentId();
+        //미등록 수강생 처리
+        if(studentId == null) {
+            System.out.println("\n해당 수강생이 없습니다.");
+            System.out.println("\n등급 조회 종료\n");
+            return;
+        }
         //아이디로 학생찾기
         Student resultStudent = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0);
 
