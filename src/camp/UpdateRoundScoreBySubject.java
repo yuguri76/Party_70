@@ -88,24 +88,25 @@ public class UpdateRoundScoreBySubject {
         System.out.println("\n점수 수정 성공!");
     }
 
-    // studentStore에서 ID로 Student 객체를 꺼내오는 Getter 메소드
+    // studentStore --ID--> Student
     public static Student targetingStudent(String studentId) {
-        Student targetStudent = getStudentStore().stream().filter((Student s) -> s.getStudentId().equals(studentId)).findFirst().get();
-        return targetStudent;
+        return getStudentStore().stream().
+                filter((Student s) -> s.getStudentId().equals(studentId)).findFirst().get();
     }
 
-    // Score 리스트 --수강생으로 필터링-->  Score 리스트
+    // List<Score> --수강생--> List<Score>
     public static List<Score> filteringStudent(List<Score> list, String studentId) {
-        return list.stream().filter(score -> score.getStudent().getStudentId().equals(studentId)).toList();
+        return list.stream().
+                filter(score -> score.getStudent().getStudentId().equals(studentId)).toList();
     }
 
-    // Score 리스트 --과목으로 필터링--> Score 리스트
+    // List<Score> --과목--> List<Score>
     public static List<Score> filteringSubject(List<Score> list, String subjectId) {
         return list.stream()
                 .filter(score -> score.getSubject().getSubjectId().equals(subjectId)).toList();
     }
 
-    // Score 리스트 --특정회차 필터링--> Score 객체
+    // List<Score> --특정회차--> Score
     public static Score filteringRound(List<Score> list, int targetRound) {
         return list.stream()
                 .filter(score -> score.getRound() == targetRound).findAny().get();
