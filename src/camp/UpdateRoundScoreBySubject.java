@@ -12,16 +12,12 @@ import static camp.Print.*;
 
 public class UpdateRoundScoreBySubject {
     private static Scanner sc = new Scanner(System.in);
-    private static Print print = new Print();
-
-    private static String studentId;
-    private static String subjectId;
-    private static Score score;
 
     public static void updateRoundScoreBySubject() {
         System.out.println("점수를 수정합니다...");
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
         String id = sc.next();
+        String studentId;
         if (getStudentStore().stream().noneMatch((Student s) -> s.getStudentId().equals(id))) {
             System.out.println("존재하지 않는 수강생 번호 입니다.");
             return;
@@ -35,7 +31,7 @@ public class UpdateRoundScoreBySubject {
         List<Score> list = filteringStudent(getScoreStore(), studentId);
 
         System.out.println("수정할 과목을 입력해주세요.");
-        subjectId = sc.nextLine();
+        String subjectId = sc.nextLine();
         // 존재하는 과목인지 검증
         if (getSubjectStore().stream().noneMatch((Subject s) -> s.getSubjectId().equals(subjectId))) {
             System.out.println("존재하지 않는 과목입니다.");
@@ -67,21 +63,21 @@ public class UpdateRoundScoreBySubject {
             return;
         }
 
-        score = filteringRound(list, targetRound);
+        Score score = filteringRound(list, targetRound);
         int beforeScore = score.getScore();
 
         System.out.println("현재 점수는 " + beforeScore + "점 입니다.");
         System.out.println();
         System.out.println("수정할 점수를 입력해 주세요.");
 
-        int inscore = sc.nextInt();
+        int inputScore = sc.nextInt();
         sc.nextLine();
-        if (inscore > 100 || inscore < 0) {
+        if (inputScore > 100 || inputScore < 0) {
             System.out.println("1부터 100 까지의 점수를 입력하세요");
             return;
         }
 
-        score.setScore(inscore);
+        score.setScore(inputScore);
         int afterScore = score.getScore();
 
         System.out.println("이전 점수 : " + beforeScore + " | 수정 점수 : " + afterScore);
