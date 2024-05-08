@@ -232,7 +232,7 @@ public class CampManagementApplication {
             }
         }
     }
-
+    // UpdateRoundScoreBySubject.Class로 분리
 
     // 수강생 목록 조회
     private static void inquireStudent() {

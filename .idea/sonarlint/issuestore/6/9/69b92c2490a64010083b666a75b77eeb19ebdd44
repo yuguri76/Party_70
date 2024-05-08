@@ -1,13 +1,13 @@
 
 
-java:S1301"KReplace this "switch" statement by "if" statements to increase readability.(ÜŸ•8ÔÄÃ‚õ1J$fe62cbc2-1b2c-4469-ab9d-231b8467b328
+java:S1301"KReplace this "switch" statement by "if" statements to increase readability.(ÜŸ•8ÔÄÃ‚õ1J$a3bbb10f-09cb-4ad0-b751-ec067c330ddc
 
-java:S1301^"KReplace this "switch" statement by "if" statements to increase readability.(ÜŸ•8Á¦û“õ1J$83a0b956-c059-414e-96a0-985a6aa06883
+java:S1301^"KReplace this "switch" statement by "if" statements to increase readability.(ÜŸ•8Á¦û“õ1J$c177565e-6336-4368-892e-e123025cdcec
 \
-java:S1700"Rename field "score"(µ¼æÿÿÿÿÿ8ØÄÃ‚õ1J$830ea4a2-731b-4dde-ba52-a819b3cc4cff
+java:S1700"Rename field "score"(µ¼æÿÿÿÿÿ8ØÄÃ‚õ1J$f910a8b1-e8ce-4204-bbae-c59ab4caa4f9
 •
-java:S3776"RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(üˆ‰ö8øÅÃ‚õ1J$21955563-0439-4628-9762-10c28000cf3b
-d	java:S131""Add a default case to this switch.(ÜŸ•8ûÅÃ‚õ1J$a62ca25f-84e0-4961-ac9f-b57a6683fc67
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(üˆ‰ö8øÅÃ‚õ1J$27d4ef3e-ba73-43a3-9d04-b115492d172f
+d	java:S131""Add a default case to this switch.(ÜŸ•8ûÅÃ‚õ1J$1b673d34-75c4-4bdc-a273-e6f97139fd73
 ”
-java:S3776["RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(Ûï¡/8¤§û“õ1J$9efd643b-c215-4b94-8c6e-71c88ab7fb2d
-d	java:S131^""Add a default case to this switch.(ÜŸ•8¥§û“õ1J$3138e22d-2d5c-4795-b76c-abdd2a552199
+java:S3776["RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(Ûï¡/8¤§û“õ1J$33eef1f8-80a2-4731-be54-a3a911a6f207
+d	java:S131^""Add a default case to this switch.(ÜŸ•8¥§û“õ1J$b8e6519e-804d-4a7f-922d-7731e37ad9dc
