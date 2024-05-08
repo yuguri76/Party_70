@@ -22,6 +22,7 @@ public class CampManagementApplication {
     private static List<Student> studentStore;
     private static List<Subject> subjectStore;
     private static List<Score> scoreStore;
+    //private static CreateScore createScore = new CreateScore(); 클래스의 인스턴스화를 위해 남겨놓음
 
     // 과목 타입
     private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";
@@ -99,9 +100,8 @@ public class CampManagementApplication {
         );
         scoreStore = new ArrayList<>();
     }
-
     // index 자동 증가
-    private static String sequence(String type) {
+    public static String sequence(String type) {
         switch (type) {
             case INDEX_TYPE_STUDENT -> {
                 studentIndex++;
@@ -232,7 +232,7 @@ public class CampManagementApplication {
             }
         }
     }
-
+    // UpdateRoundScoreBySubject.Class로 분리
 
     // 수강생 목록 조회
     private static void inquireStudent() {
@@ -261,9 +261,9 @@ public class CampManagementApplication {
             int input = sc.nextInt();
 
             switch (input) {
-                case 1 -> createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
-                case 2 -> updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
-                case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
+                case 1 -> CreateScore.createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
+                case 2 -> UpdateRoundScoreBySubject.updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
+                case 3 -> GradeInquiry.inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
                 case 4 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
@@ -283,270 +283,28 @@ public class CampManagementApplication {
     }
 
     // 수강생의 과목별 시험 회차 및 점수 등록
-    private static void createScore() {
-        System.out.println("시험 점수를 등록합니다...");
-        // 기능 구현
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        if(studentId == null) {
-            System.out.println("존재하지 않는 수강생입니다.");
-            return;
-        }
-        sc.nextLine();
+    // CreateScore.class
 
-        Student student = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0); // 수강중인 과목 필터링
-        List<Subject> enrolledSubject = student.getEnrolledSubjects();
-        System.out.println("\n다음은 " + student.getStudentName() + " 학생의 수강 과목입니다.");
-        System.out.printf("%-9s%-20s%n", "과목ID", "과목이름");
-        System.out.println("----------------------------");
-        enrolledSubject.forEach(subject -> {
-            System.out.printf("%-10s%-20s%n", subject.getSubjectId(), subject.getSubjectName());
-        });
-        System.out.println();
-        System.out.println("과목의 번호를 입력하시오");
-        String subjectId = sc.nextLine();
-        if(subjectStore.stream().noneMatch((Subject s) -> s.getSubjectId().equals(subjectId))) {
-            System.out.println("존재하지 않는 과목입니다.");
-            return;
-        }
-
-        System.out.println("점수를 입력하시오");
-        int score = sc.nextInt();
-        if(score > 100 || score < 0) {
-            System.out.println("1부터 100 까지의 점수를 입력하세요");
-            return;
-        }
-
-        System.out.println("회차를 입력하시오");
-        int round = sc.nextInt();
-        if(round > 10 || round < 0) {
-            System.out.println("1부터 10까지의 회차를 입력하세요");
-            return;
-        }
-
-        Student resultStudent = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0); // score객체에 저장할 student 객체 생성
-        Subject resultSubject = subjectStore.stream().filter((Subject s) -> s.getSubjectId().equals(subjectId)).toList().get(0); // score객체에 저장할 subject 객체 생성
-        if(scoreStore.stream().anyMatch((Score s) -> { return
-                s.getStudent().getStudentId().equals(studentId) &&
-                        s.getSubject().getSubjectId().equals(subjectId) &&
-                        s.getRound() == round;}) // 이름, 과목, 회차 셋 모두 검사해서 중복여부 확인
-        ) {
-            System.out.println("중복된 회차가 있습니다.");
-            return;
-        }
-
-        Score scoreObject = new Score(sequence(INDEX_TYPE_SCORE), resultStudent, resultSubject, round, score);
-        scoreStore.add(scoreObject);
-        System.out.println("\n점수 등록 성공!");
+    public static String getIndexTypeScore() {
+        return INDEX_TYPE_SCORE; // INDEX_TYPE_SCORE getter 메소드
     }
 
     // 수강생의 과목별 회차 점수 수정
-    private static void updateRoundScoreBySubject() {
-            System.out.println("점수를 수정합니다...");
-            String studentId = getStudentId();// 관리할 수강생 고유 번호
-            sc.nextLine();
-            if (studentStore.stream().noneMatch((Student s) -> s.getStudentId().equals(studentId))) {
-                System.out.println("존재하지 않는 수강생입니다.");
-                return;
-            }
+    // UpdateRoundScoreBySubjects.class
 
-            // 학생의 수강과목 조회 및 출력
-            Student targetStudent = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).findFirst().get();
-            System.out.println("\n다음은 " + targetStudent.getStudentName() + " 학생의 수강 과목입니다.");
-            System.out.printf("%-10s%-10s%-20s%n", "과목ID", "과목타입", "과목이름");
-            System.out.println("----------------------------------");
-            for (Subject subject : targetStudent.getEnrolledSubjects()) {
-                String subjectType = subject.getSubjectType();
-                String subjectName = subject.getSubjectName();
-                String subjectId = subject.getSubjectId();
-                System.out.printf("%-10s%-15s%-20s%n", subjectId, subjectType, subjectName);
-            }
-
-            // 점수 저장소에서 수강생으로 필터링 : 수강생
-            List<Score> studentScoreList = scoreStore.stream()
-                    .filter(score -> score.getStudent().getStudentId().equals(studentId)).toList();
-
-            // 기능 구현 (수정할 과목 및 회차, 점수)
-            System.out.println("수정할 과목을 입력해주세요.");
-            String subjectId = sc.nextLine();
-
-            // 존재하는 과목인지 검증
-            if (subjectStore.stream().noneMatch((Subject s) -> s.getSubjectId().equals(subjectId))) {
-                System.out.println("존재하지 않는 과목입니다.");
-                return;
-            } // 수강생이 수강하는 과목인지 검증
-            else if (studentScoreList.stream().noneMatch((Score s) -> s.getSubject().getSubjectId().equals(subjectId))) {
-                System.out.println("학생이 수강하지 않은 과목입니다.");
-                return;
-            }
-
-            // 지정된 과목 이름 할당
-            String subjectName = subjectStore.stream().filter((Subject s) ->
-                    s.getSubjectId().equals(subjectId)).findFirst().get().getSubjectName();
-
-            // 수강생의 점수 중 해당 과목으로 필터링 : 수강생, 과목
-            List<Score> studentSubjectScoreList = studentScoreList.stream()
-                    .filter(score -> score.getSubject().getSubjectId().equals(subjectId)).toList();
-            if (studentSubjectScoreList.isEmpty()) {
-                System.out.println("수강생이 이 과목의 시험을 응시하지 않았습니다.");
-                return;
-            }
-            System.out.println(subjectName + " 과목의 점수 내역입니다.");
-            studentSubjectScoreList.forEach(score -> {
-                int _round = score.getRound();
-                int _score = score.getScore();
-                        System.out.println(_round+"회차 점수 : "+_score);
-            }
-            );
-
-            System.out.println("수정할 회차를 입력해주세요.");
-            int targetRound = sc.nextInt();
-            sc.nextLine();
-            // 입력이 1부터 10인지 검증
-            if (targetRound > 10 || targetRound < 0) {
-                System.out.println("1부터 10까지의 회차를 입력하세요");
-                return;
-            } // 수강생이 응시한 회차인지 검증
-            else if (studentSubjectScoreList.stream().noneMatch((Score s) -> s.getRound()==targetRound)) {
-                System.out.println("학생이 아직 응시하지 않은 회차입니다.");
-                return;
-            }
-            // 목표로 하는 수강생의 과목 회차 점수 score 인스턴스
-            Score targetScore = studentSubjectScoreList.stream()
-                            .filter(score -> score.getRound() == targetRound).findAny().get();
-            System.out.println("현재 점수는 "+targetScore.getScore()+"점 입니다.");
-            int beforeScore = targetScore.getScore();
-            System.out.println("수정할 점수를 입력해 주세요.");
-            int score = sc.nextInt();
-            sc.nextLine();
-            if (score > 100 || score < 0) {
-                System.out.println("1부터 100 까지의 점수를 입력하세요");
-                return;
-            }
-
-            targetScore.setScore(score);
-            int afterScore = targetScore.getScore();
-            System.out.println("이전 점수 : "+beforeScore+" | 수정 점수 : "+ afterScore);
-            // 기능 구현
-            System.out.println("\n점수 수정 성공!");
-//
-//            scoreStore.forEach(score1 -> {
-//                System.out.println(score1.getScoreId());
-//                System.out.println(score1.getStudent().getStudentName());
-//                System.out.println(score1.getSubject().getSubjectName());
-//                System.out.println(score1.getRound());
-//                System.out.println(score1.getScore());
-//                System.out.println(score1.getGrade());
-//            });
+    // studentStore의 getter 메서드
+    public static List<Student> getStudentStore() {
+        return studentStore;
     }
 
-    // 수강생의 특정 과목 회차별 등급 조회
-    private static void inquireRoundGradeBySubject() {
-        String studentId = getStudentId();
-        //미등록 수강생 처리
-        if(studentId == null) {
-            System.out.println("\n해당 수강생이 없습니다.");
-            System.out.println("\n등급 조회 종료\n");
-            return;
-        }
-        //아이디로 학생찾기
-        Student resultStudent = studentStore.stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0);
+    // subjectStore의 getter 메서드
+    public static List<Subject> getSubjectStore() {
+        return subjectStore;
+    }
 
-        /*조회할 과목 선택 후 회차별 등급 조회*/
-        System.out.println("\n다음은 " + resultStudent.getStudentName() + " 학생의 수강 과목입니다.");
-        System.out.printf("%-10s%-10s%-20s%n", "과목ID", "과목타입", "과목이름");
-        System.out.println("----------------------------------");
-        for (Subject subject : resultStudent.getEnrolledSubjects()) {
-            String subjectType = subject.getSubjectType();
-            String subjectName = subject.getSubjectName();
-            String subjectId = subject.getSubjectId();
-            System.out.printf("%-10s%-15s%-20s%n", subjectId, subjectType, subjectName);
-        }
-
-        /*입력한 과목 회차별 등급 조회*/
-        System.out.print("\n조회할 과목ID 입력해주세요. :");
-        String searchID = sc.next().toUpperCase();
-        Subject resultSubject = subjectStore.stream().filter((Subject s) -> s.getSubjectId().equals(searchID)).toList().get(0);
-        System.out.println("\n" + resultSubject.getSubjectName() + " 과목의 회차별 등급을 조회합니다...");
-        List<Score> resultScore = scoreStore.stream().filter(s -> s.getStudent().equals(resultStudent) && s.getSubject().equals(resultSubject)).toList();
-        if (!resultScore.isEmpty()) {
-            System.out.printf("%-8s%-10s%n", "회차", "등급");
-            System.out.println("------------");
-            for (Score score : resultScore) {
-                int round = score.getRound();
-                char grade = score.getGrade();
-                System.out.printf("%-10s%-10s%n", round, grade);
-            }
-        } else {
-            System.out.println("점수가 등록되어 있지 않습니다.");
-        }
-
-        /*과목별 평균 등급을 조회*/
-        System.out.print("\n과목별 평균 등급을 조회하시겠습니까? (yes 입력 시, 조회):");
-        String input = sc.next();
-        if (input.equals("yes")) {
-            System.out.println("\n과목이름(과목타입)  :  평균등급");
-            System.out.println("----------------------------------");
-            for (Subject subject : resultStudent.getEnrolledSubjects()) {
-                double average = 0; // 과목별 평균 점수
-                String averageGrade = null; // 과목별 평균 등급
-                List<Score> subjectScore = scoreStore.stream().filter(s -> s.getStudent().equals(resultStudent) && s.getSubject().equals(subject)).toList();
-
-                for (Score score : subjectScore) {
-                    average += score.getScore();
-                }
-                average /= subjectScore.size();
-
-                switch (subject.getSubjectType()) {
-                    case "MANDATORY":
-                        if (average <= 100) {
-                            averageGrade = "A";
-                        }
-                        if (average < 95) {
-                            averageGrade = "B";
-                        }
-                        if (average < 90) {
-                            averageGrade = "C";
-                        }
-                        if (average < 80) {
-                            averageGrade = "D";
-                        }
-                        if (average < 70) {
-                            averageGrade = "F";
-                        }
-                        if (average < 60) {
-                            averageGrade = "N";
-                        }
-                        break;
-                    case "CHOICE":
-                        if (average <= 100) {
-                            averageGrade = "A";
-                        }
-                        if (average < 90) {
-                            averageGrade = "B";
-                        }
-                        if (average < 80) {
-                            averageGrade = "C";
-                        }
-                        if (average < 70) {
-                            averageGrade = "D";
-                        }
-                        if (average < 60) {
-                            averageGrade = "F";
-                        }
-                        if (average < 50) {
-                            averageGrade = "N";
-                        }
-                        break;
-                }
-                if (averageGrade == null) {
-                    averageGrade = "점수 미등록";
-                }
-                System.out.println(subject.getSubjectName() + "(" + subject.getSubjectType() + ")  :  " + averageGrade);
-            }
-        }
-
-        /*다시 메인으로 돌아가기 전 출력문구*/
-        System.out.println("\n등급 조회 종료");
+    // scoreStore의 getter 메서드
+    public static List<Score> getScoreStore() {
+        return scoreStore;
     }
 
 }
