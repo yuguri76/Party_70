@@ -48,7 +48,7 @@ public class UpdateRoundScoreBySubject {
             System.out.println("존재하지 않는 과목입니다.");
             return;
         } // 수강생이 수강하는 과목인지 검증
-        else if (studentScoreList.stream().noneMatch((Score s) -> s.getSubject().getSubjectId().equals(subjectId))) {
+        else if (targetStudent.getEnrolledSubjects().stream().noneMatch((Subject s) -> s.getSubjectId().equals(subjectId))) {
             System.out.println("학생이 수강하지 않은 과목입니다.");
             return;
         }
