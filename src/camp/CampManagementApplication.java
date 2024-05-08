@@ -283,12 +283,14 @@ public class CampManagementApplication {
     }
 
     // 수강생의 과목별 시험 회차 및 점수 등록
+    // CreateScore.class
 
     public static String getIndexTypeScore() {
         return INDEX_TYPE_SCORE; // INDEX_TYPE_SCORE getter 메소드
     }
-    // 수강생의 과목별 회차 점수 수정
 
+    // 수강생의 과목별 회차 점수 수정
+    // UpdateRoundScoreBySubjects.class
 
     // studentStore의 getter 메서드
     public static List<Student> getStudentStore() {
