@@ -11,6 +11,10 @@ import static camp.CampManagementApplication.*;
 import static camp.Print.printStudentSubject;
 
 public class CreateScore {
+    private static final int SCORE_MAX = 100;
+    private static final int SCORE_MIN = 0;
+    private static final int ROUND_MAX = 10;
+    private static final int ROUND_MIN = 0;
     private static Scanner sc = new Scanner(System.in);
     public static void createScore() {
         System.out.println("시험 점수를 등록합니다...");
@@ -39,14 +43,14 @@ public class CreateScore {
 
         System.out.println("점수를 입력하시오");
         int score = sc.nextInt();
-        if(score > 100 || score < 0) {
+        if(score > SCORE_MAX || score < SCORE_MIN) {
             System.out.println("1부터 100 까지의 점수를 입력하세요");
             return;
         }
 
         System.out.println("회차를 입력하시오");
         int round = sc.nextInt();
-        if(round > 10 || round < 0) {
+        if(round > ROUND_MAX || round < ROUND_MIN) {
             System.out.println("1부터 10까지의 회차를 입력하세요");
             return;
         }
