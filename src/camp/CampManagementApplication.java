@@ -155,7 +155,7 @@ public class CampManagementApplication {
 
             switch (input) {
                 case 1 -> createStudent(); // 수강생 등록
-                case 2 -> inquireStudent(); // 수강생 목록 조회
+                case 2 -> StudentManager.checkStudent(studentStore); // 수강생 목록 조회
                 case 3 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
@@ -184,18 +184,7 @@ public class CampManagementApplication {
     }
 
     // 수강생 목록 조회
-    private static void inquireStudent() {
-        System.out.println("\n수강생 목록을 조회합니다...");
-        // 기능 구현
-        if(studentStore.isEmpty()) {
-            System.out.println("\n등록된 수강생이 없습니다.");
-        }else {
-            for (Student student : studentStore) {
-                System.out.println("수강생 성명: " + student.getStudentName() + " || " + "수강생 ID: " + student.getStudentId());
-            }
-            System.out.println("\n수강생 목록 조회 성공!");
-        }
-    }
+
 
     private static void displayScoreView() {
         boolean flag = true;

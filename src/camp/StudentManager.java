@@ -7,8 +7,7 @@ package camp;
         import java.util.Scanner;
         import java.util.stream.Collectors;
 
-        import static camp.CampManagementApplication.SUBJECT_TYPE_CHOICE;
-        import static camp.CampManagementApplication.SUBJECT_TYPE_MANDATORY;
+        import static camp.CampManagementApplication.*;
 
 public class StudentManager {
     public static Student createStudent(String studentId, String studentName, List<Subject> subjects, Scanner sc) {
@@ -57,6 +56,18 @@ public class StudentManager {
             if (selectedCount < minRequired) {
                 System.out.println("최소 " + minRequired + "개 이상 선택해주세요.");
             }
+        }
+    }
+    public static void checkStudent(List<Student> studentStore){
+        System.out.println("\n수강생 목록을 조회합니다...");
+
+        if(studentStore.isEmpty()) {
+            System.out.println("\n등록된 수강생이 없습니다.");
+        }else {
+            for (Student student : studentStore) {
+                System.out.println("수강생 성명: " + student.getStudentName() + " || " + "수강생 ID: " + student.getStudentId());
+            }
+            System.out.println("\n수강생 목록 조회 성공!");
         }
     }
 }
