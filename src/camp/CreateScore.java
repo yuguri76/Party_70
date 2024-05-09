@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import static camp.CampManagementApplication.*;
+import static camp.Print.printStudentSubject;
 
 public class CreateScore {
     private static Scanner sc = new Scanner(System.in);
@@ -27,12 +28,7 @@ public class CreateScore {
 
         Student student = getStudentStore().stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0); // 수강중인 과목 필터링
         List<Subject> enrolledSubject = student.getEnrolledSubjects();
-        System.out.println("\n다음은 " + student.getStudentName() + " 학생의 수강 과목입니다.");
-        System.out.printf("%-9s%-20s%n", "과목ID", "과목이름");
-        System.out.println("----------------------------");
-        enrolledSubject.forEach(subject -> {
-            System.out.printf("%-10s%-20s%n", subject.getSubjectId(), subject.getSubjectName());
-        });
+        printStudentSubject(student.getStudentId());
         System.out.println();
         System.out.println("과목의 번호를 입력하시오");
         String subjectId = sc.nextLine();
