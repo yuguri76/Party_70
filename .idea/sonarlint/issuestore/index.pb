@@ -13,8 +13,6 @@ I
 src/camp/CreateScore.java,7\1\71a773f32e703e9e993abbf49517e240a676deea
 J
 src/camp/GradeInquiry.java,9\0\90830548c0a65512c10bc4d720649b287f3d5e3a
-]
--src/camp/model/UpdateRoundScoreBySubject.java,5\1\517a49797938ab964a67bdacbd37aa2fcadb818e
 W
 'src/camp/UpdateRoundScoreBySubject.java,9\0\90e0b3a0b61f7a5e0e7f4a8953c033d47bf02367
 9
@@ -23,3 +21,5 @@ S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 ]
 -.idea/sonarlint/securityhotspotstore/index.pb,8\8\88a9255124c95bdc913197c120a8d560edc59c8e
+L
+src/camp/StudentManager.java,6\4\642c391ee717e0cefbf1264251566457be976041
