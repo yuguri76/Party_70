@@ -25,7 +25,6 @@ public class GradeInquiry {
         } else {
             studentId = id;
         }
-
         //미등록 수강생 처리
         if (studentId == null) {
             System.out.println("\n해당 수강생이 없습니다.");
@@ -33,21 +32,13 @@ public class GradeInquiry {
             return;
         }
 
+        //입력된 학생의 수강 과목 조회
+        Print.printStudentSubject(studentId);
+
+        /*입력한 과목 회차별 등급 조회*/
         //아이디로 학생찾기
         Student resultStudent = getStudentStore().stream().filter((Student s) -> s.getStudentId().equals(studentId)).toList().get(0);
 
-        /*조회할 과목 선택 후 회차별 등급 조회*/
-        System.out.println("\n다음은 " + resultStudent.getStudentName() + " 학생의 수강 과목입니다.");
-        System.out.printf("%-10s%-10s%-20s%n", "과목ID", "과목타입", "과목이름");
-        System.out.println("----------------------------------");
-        for (Subject subject : resultStudent.getEnrolledSubjects()) {
-            String subjectType = subject.getSubjectType();
-            String subjectName = subject.getSubjectName();
-            String subjectId = subject.getSubjectId();
-            System.out.printf("%-10s%-15s%-20s%n", subjectId, subjectType, subjectName);
-        }
-
-        /*입력한 과목 회차별 등급 조회*/
         System.out.print("\n조회할 과목ID 입력해주세요. :");
         String searchID = sc.next().toUpperCase();
         Subject resultSubject = getSubjectStore().stream().filter((Subject s) -> s.getSubjectId().equals(searchID)).toList().get(0);
@@ -92,7 +83,7 @@ public class GradeInquiry {
                 }
             }
         }
-        /*다시 메인으로 돌아가기 전 출력문구*/
+        //다시 메인으로 돌아가기 전 출력문구
         System.out.println("\n등급 조회 종료");
     }
 }
